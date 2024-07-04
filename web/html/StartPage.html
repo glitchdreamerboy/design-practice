@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f2f2f2;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+<div class="button-container">
+    <button class="btn" id="viewReportsBtn">Просмотр отчетов</button>
+    <button class="btn" id="addEquipmentBtn">Добавить оборудование</button>
+    <button class="btn" id="changeStatusBtn">Изменить статус</button>
+    <button class="btn" id="searchEquipmentBtn">Поиск оборудования</button>
+</div>
+
+<script>
+    document.getElementById("viewReportsBtn").addEventListener("click", function() {
+        window.location.href = 'ViewReport.html'; // заменить на нужный URL
+    });
+
+    document.getElementById("addEquipmentBtn").addEventListener("click", function() {
+        window.location.href = 'AddEq.html'; // заменить на нужный URL
+    });
+
+    document.getElementById("changeStatusBtn").addEventListener("click", function() {
+        window.location.href = 'updateEq.html'; // заменить на нужный URL
+    });
+
+    document.getElementById("searchEquipmentBtn").addEventListener("click", function() {
+        window.location.href = 'FindEq.html'; // заменить на нужный URL
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Отчеты о действиях с оборудованием</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .report {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+        }
+        @media (max-width: 600px) {
+            th, td {
+                display: block;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            th {
+                background-color: #fff;
+                font-weight: bold;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #ddd;
+            }
+            td:before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: block;
+
+            }
+
+        }
+        .back-button {
+            padding: 10px 20px;
+            background-color: #337ab7;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            position: static;
+            left: 10px;
+            top: 20px;
+
+
+        }
+        .back-button:hover {
+            background-color: #286090;
+        }
+    </style>
+
+
+
+</head>
+<body>
+
+<button class="back-button" onclick="goBack()">Назад</button>
+
+<div class="container">
+    <h1>Отчеты о действиях с оборудованием</h1>
+    <div class="report">
+        <table>
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Оборудование</th>
+                <th>Действие</th>
+                <th>Пользователь</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td data-label="Дата">2023-10-01</td>
+                <td data-label="Оборудование">Сервер 1</td>
+                <td data-label="Действие">Добавлено</td>
+                <td data-label="Пользователь">Иванов И.И.</td>
+            </tr>
+            <tr>
+                <td data-label="Дата">2023-10-02</td>
+                <td data-label="Оборудование">Принтер 3</td>
+                <td data-label="Действие">Обновлено</td>
+                <td data-label="Пользователь">Петров П.П.</td>
+            </tr>
+            <tr>
+                <td data-label="Дата">2023-10-03</td>
+                <td data-label="Оборудование">Маршрутизатор 2</td>
+                <td data-label="Действие">Удалено</td>
+                <td data-label="Пользователь">Сидоров С.С.</td>
+            </tr>
+            <!-- Добавьте больше строк по мере необходимости -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>

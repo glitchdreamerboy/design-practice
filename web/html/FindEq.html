@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск оборудования</title>
+    <style>
+        body {
+            .back-button {
+                display: block;
+                padding: 10px 20px;
+                background-color: #007bff ;
+                border: none;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 4px;
+                margin: 12px;
+                position: static;
+                left: 10px;
+                top: 20px;
+            }
+
+            .back-button:hover {
+                background-color: #337ab7;
+            }
+
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            background: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        form h2 {
+            margin-bottom: 10px;
+        }
+        form label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        form input[type="text"], form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .autocomplete-suggestions {
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .autocomplete-suggestion {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-suggestion:hover {
+            background: #e9e9e9;
+        }
+        form input[type="submit"] {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form input[type="submit"]:hover {
+            background: #0056b3;
+        }
+
+        @media (min-width: 600px) {
+            form {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            form label, form input[type="text"], form select, form input[type="submit"] {
+                width: auto;
+                margin-right: 10px;
+            }
+            form label {
+                flex: 1;
+            }
+            form input[type="text"], form select {
+                flex: 2;
+            }
+            form input[type="submit"] {
+                flex: none;
+                align-self: center;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            table, th, td {
+                border: 1px solid #ddd;
+            }
+            th, td {
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            @media (max-width: 800px) {
+                form {
+                    gap: 10px;
+                }
+                .container {
+                    margin: 10px;
+                }
+            }
+
+        }
+    </style>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</head>
+
+<body>
+<button class="back-button" onclick="goBack()">Назад</button>
+
+<div class="container">
+    <h1>Поиск оборудования</h1>
+    <form action="/search_equipment" onsubmit="return showResults()">
+        <h2>Фильтр</h2>
+        <label for="equipment-name">Название:</label>
+        <input type="text" id="equipment-name" name="equipment_name" onkeyup="showSuggestions(this.value)">
+        <div id="autocomplete-list" class="autocomplete-suggestions"></div>
+
+        <label for="equipment-type">Тип оборудования:</label>
+        <select id="equipment-type" name="equipment_type">
+            <option value="">Выберите тип</option>
+            <option value="type1">Категория 1</option>
+            <option value="type2">Категория 2</option>
+            <option value="type3">Категория 3</option>
+        </select>
+
+        <label for="equipment-price">Выберите цену:</label>
+        <div class="scale">
+            <div style="margin-left:50px;width:100px;" class="bar"></div>
+        <div class="toggle min-toggle"></div>
+        <div class="toggle max-toggle"></div>
+            </div>
+            <div class="price-controls" id="equipment-price">
+                от <input  id="equipment-minprice" class="min-price" type="text" value="5 000">
+             до <input id="equipment-maxprice" class="max-price" type="text" value="15 000">
+            </div>
+
+        <label for="equipment-status">Статус оборудования:</label>
+        <select id="equipment-status" name="equipment-status">
+            <option value="all">Все</option>
+            <option value="active">Активно</option>
+            <option value="inactive">Не активно</option>
+        </select>
+
+        <input type="submit" value="Поиск">
+    </form>
+</div>
+
+    <form id="filter-form" onsubmit="return showResults()">
+    <div class="hidden" id="results-container">
+        <h2>Результаты поиска:</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>Категория</th>
+                <th>Линейка</th>
+                <th>Серийный номер</th>
+                <th>Цена</th>
+                <th>Статус</th>
+            </tr>
+            </thead>
+            <tbody id="results-table-body">
+        <!-- Здесь будут выводиться результаты -->
+            </tbody>
+        </table>
+    </div>
+    </form>
+
+
+
+
+<script>
+
+    function showResults() {
+        var resultsContainer = document.getElementById("results-container");
+
+        // Пример данных, соответствующих фильтру
+        var data = [
+            { name: "Принтер1", category: "Категория 1", range: "Линейка 1", serialNumber: "12345",price: "123", status:"inactive" },
+            { name: "Принтер2", category: "Категория 1", range: "Линейка 2", serialNumber: "67890",price: "123", status:"inactive"},
+            { name: "Принтер3", category: "Категория 1", range: "Линейка 3", serialNumber: "11223",price: "123", status:"active"},
+            { name: "Принтер4", category: "Категория 1", range: "Линейка 4", serialNumber: "41245",price: "123", status:"active"}
+        ];
+
+        var resultsTable = document.getElementById("results-table-body");
+        resultsTable.innerHTML = ""; // Очистка предыдущих результатов
+
+        data.forEach(function(item) {
+            var row = `<tr>
+                            <td>${item.name}</td>
+                            <td>${item.category}</td>
+                            <td>${item.range}</td>
+                            <td>${item.serialNumber}</td>
+                            <td>${item.price}
+                            <td>${item.status}</td>
+                           </tr>`;
+            resultsTable.insertAdjacentHTML('beforeend', row);
+        });
+
+        resultsContainer.classList.remove("hidden");
+
+        // Предотвратить отправку формы
+        return false;
+
+    }
+
+    const equipmentNames = [
+        "Принтер"
+    ];
+
+    function showSuggestions(value) {
+        const list = document.getElementById("autocomplete-list");
+        list.innerHTML = '';
+        if (!value) return;
+        const matchingNames = equipmentNames.filter(name => name.toLowerCase().includes(value.toLowerCase()));
+        matchingNames.forEach(name => {
+            const suggestion = document.createElement("div");
+            suggestion.className = "autocomplete-suggestion";
+            suggestion.textContent = name;
+            suggestion.onclick = () => {
+                document.getElementById("equipment-name").value = name;
+                list.innerHTML = '';
+            };
+            list.appendChild(suggestion);
+        });
+
+
+    }
+</script>
+</body>
+</html>

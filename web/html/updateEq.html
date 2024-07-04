@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изменить информацию об оборудовании</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            position: relative;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f2f2f2;
+            z-index: 1;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .edit-form input {
+            margin-bottom: 10px;
+            display: block;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px 0;
+            background-color: #337ab7;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #286090;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        @media (max-width: 600px) {
+            table, th, td {
+                font-size: 14px;
+            }
+            .edit-form input {
+                padding: 8px;
+                font-size: 14px;
+            }
+            button {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            background-color: #337ab7;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: static;
+            left: 10px;
+            top: 20px;
+
+        }
+
+        .back-button:hover {
+            background-color: #286090;
+        }
+    </style>
+</head>
+<body>
+
+<button class="back-button" onclick="goBack()">Назад</button>
+
+<script>
+
+</script>
+
+<div class="container">
+    <h1>Изменить информацию об оборудовании</h1>
+    <div class="table-container">
+        <table id="productTable">
+            <thead>
+            <tr>
+                <th>Наименование товара</th>
+                <th>Цена</th>
+                <th>Количество</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr data-id="1">
+                <td>Товар 1</td>
+                <td>100</td>
+                <td>10</td>
+            </tr>
+            <tr data-id="2">
+                <td>Товар 2</td>
+                <td>200</td>
+                <td>15</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="action-buttons">
+        <button onclick="editSelected()">Редактировать выбранное</button>
+        <button onclick="deleteSelected()">Удалить выбранное</button>
+    </div>
+
+    <div class="edit-form" id="editForm">
+        <h2>Редактирование товара</h2>
+        <label for="productName">Наименование товара:</label>
+        <input type="text" id="productName">
+        <label for="productPrice">Цена:</label>
+        <input type="number" id="productPrice">
+        <label for="productQuantity">Количество:</label>
+        <input type="number" id="productQuantity">
+        <button onclick="saveChanges()">Сохранить изменения</button>
+    </div>
+</div>
+
+<script>
+    let currentProductId = null;
+
+    document.querySelectorAll('tbody tr').forEach(row => {
+        row.addEventListener('click', () => {
+            document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+            row.classList.add('selected');
+            currentProductId = row.getAttribute('data-id');
+        });
+    });
+
+    function editSelected() {
+        if (currentProductId === null) {
+            alert('Пожалуйста, выберите товар.');
+            return;
+        }
+        const row = document.querySelector(`tr[data-id="${currentProductId}"]`);
+        const name = row.children[0].textContent;
+        const price = row.children[1].textContent;
+        const quantity = row.children[2].textContent;
+
+        document.getElementById('productName').value = name;
+        document.getElementById('productPrice').value = price;
+        document.getElementById('productQuantity').value = quantity;
+
+        document.getElementById('editForm').style.display = 'block';
+    }
+
+    function saveChanges() {
+        if (currentProductId === null) return;
+
+        const row = document.querySelector(`tr[data-id="${currentProductId}"]`);
+        const name = document.getElementById('productName').value;
+        const price = document.getElementById('productPrice').value;
+        const quantity = document.getElementById('productQuantity').value;
+
+        row.children[0].textContent = name;
+        row.children[1].textContent = price;
+        row.children[2].textContent = quantity;
+
+        document.getElementById('editForm').style.display = 'none';
+    }
+
+    function deleteSelected() {
+        if (currentProductId === null) {
+            alert('Пожалуйста, выберите товар.');
+            return;
+        }
+        const confirmation = confirm("Вы уверены, что хотите удалить этот товар?");
+        if (confirmation) {
+            const row = document.querySelector(`tr[data-id="${currentProductId}"]`);
+            row.parentNode.removeChild(row);
+            currentProductId = null;
+        }
+    }
+
+    function goBack() {
+        window.history.back();
+    }
+</script>
+</body>
+</html>
